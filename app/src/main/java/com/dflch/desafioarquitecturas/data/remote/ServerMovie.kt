@@ -1,5 +1,6 @@
 package com.dflch.desafioarquitecturas.data.remote
 
+import com.dflch.desafioarquitecturas.data.Movie
 import com.dflch.desafioarquitecturas.data.local.LocalMovie
 
 data class ServerMovie(
@@ -20,7 +21,7 @@ data class ServerMovie(
     val favorite: Boolean = false
 )
 
-fun ServerMovie.toLocalMovie() = LocalMovie(
+fun ServerMovie.toMovie() = Movie(
     id = id,
     title = title,
     overview = overview,

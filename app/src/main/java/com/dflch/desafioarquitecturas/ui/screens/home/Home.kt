@@ -34,50 +34,31 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.dflch.desafioarquitecturas.data.Movie
+import com.dflch.desafioarquitecturas.data.MoviesRepository
 import com.dflch.desafioarquitecturas.data.local.MoviesDao
 import com.dflch.desafioarquitecturas.data.remote.ServerMovie
 import com.dflch.desafioarquitecturas.ui.theme.DesafioArquitecturasTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(moviesDao: MoviesDao) {
+fun Home(moviesRepository: MoviesRepository) {
     DesafioArquitecturasTheme {
-
-        //Código se traslada -> MainViewModel
-        //val movies = produceState<List<ServerMovie>>(initialValue = emptyList()){
-        //    value = Retrofit.Builder()
-        //        .baseUrl("https://api.themoviedb.org/3/")
-        //        .addConverterFactory(GsonConverterFactory.create())
-        //        .build()
-        //        .create(MoviesService::class.java)
-        //        .getMovies()
-        //        .results
-        //}
-
-        //Poder ver el viewModel en compose
-        val viewModel: HomeViewModel = viewModel{ HomeViewModel(moviesDao) }
-
-        //LiveData
-        //val state by viewModel.state.observeAsState(MainViewModel.UIState())
-
-        //StateFlow
+        val viewModel: HomeViewModel = viewModel { HomeViewModel(moviesRepository) }
         val state by viewModel.state.collectAsState()
 
-        //A surface container using the 'background' color from the theme
-
+        // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-
             Scaffold(
-                topBar = { TopAppBar(title = { Text(text= "Movies") }) }
+                topBar = { TopAppBar(title = { Text(text = "Movies") }) }
             ) { padding ->
-
-                if (state.loading){
+                if (state.loading) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center) {
+                        contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator()
                     }
                 }
@@ -91,8 +72,6 @@ fun Home(moviesDao: MoviesDao) {
                         contentPadding = PaddingValues(4.dp)
                     ) {
                         items(state.movies) { movie ->
-                            //items(viewModel.state.movies){movie ->
-                            //items(movies.value){movie ->
                             MovieItem(
                                 movie = movie,
                                 onClick = { viewModel.onMovieClick(movie) }
@@ -101,17 +80,17 @@ fun Home(moviesDao: MoviesDao) {
                     }
                 }
             }
+
         }
     }
 }
 
 @Composable
-fun MovieItem(movie: Movie, onClick: () -> Unit ) {
+fun MovieItem(movie: Movie, onClick: () -> Unit) {
     Column(
         modifier = Modifier.clickable(onClick = onClick)
     ) {
         Box {
-
             AsyncImage(
                 model = "https://image.tmdb.org/t/p/w185/${movie.posterPath}",
                 contentDescription = movie.title,
@@ -119,7 +98,6 @@ fun MovieItem(movie: Movie, onClick: () -> Unit ) {
                     .fillMaxWidth()
                     .aspectRatio(2 / 3f)
             )
-
             if (movie.favorite) {
                 Icon(
                     imageVector = Icons.Default.Favorite,
@@ -134,12 +112,10 @@ fun MovieItem(movie: Movie, onClick: () -> Unit ) {
 
         Text(
             text = movie.title,
-            color = Color.Blue,
             modifier = Modifier
-                .padding(8.dp)
-                .height(42.dp),
-            maxLines = 2,
-            fontSize = 12.sp
+                .padding(16.dp)
+                .height(48.dp),
+            maxLines = 2
         )
     }
 }

@@ -33,7 +33,8 @@ interface MoviesDao {
 
 @Entity
 data class LocalMovie(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
     val title: String,
     val overview: String,
     val posterPath: String,
